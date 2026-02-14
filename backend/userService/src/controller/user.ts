@@ -57,3 +57,53 @@ export const myProfile = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      res.status(404).json({
+        message: "No user with this id",
+      });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { name, instagram, facebook, linkedin, bio } = req.body;
+    console.log("Update User Request Body:", req.body);
+
+    const user = await User.findByIdAndUpdate(
+      req.user?._id,
+      {
+        name,
+        instagram,
+        facebook,
+        linkedin,
+        bio,
+      },
+      { new: true },
+    );
+
+    const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
+      expiresIn: "5d",
+    });
+
+    res.json({
+      message: "User Updated",
+      token,
+      user,
+    });
+  } catch (error) {
+    console.log("Error updating user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
