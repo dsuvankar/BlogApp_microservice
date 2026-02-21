@@ -14,10 +14,14 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@types/multer": "^2.0.0",
+    "cloudinary": "^2.9.0",
+    "datauri": "^4.1.0",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.0",
+    "multer": "^2.0.2",
     "winston": "^3.19.0"
   },
   "devDependencies": {

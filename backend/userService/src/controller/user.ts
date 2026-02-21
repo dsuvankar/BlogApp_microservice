@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import User from "../model/User";
 import jwt from "jsonwebtoken";
 import { AuthenticatedRequest } from "../middleware/isAuth";
+import getBuffer from "../utils/dataURI";
+import { v2 as cloudinary } from "cloudinary";
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
@@ -99,6 +101,55 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
 
     res.json({
       message: "User Updated",
+      token,
+      user,
+    });
+  } catch (error) {
+    console.log("Error updating user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateProfilePic = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const file = req.file;
+
+    if (!file) {
+      res.status(400).json({
+        message: "No file to upload",
+      });
+      return;
+    }
+
+    const fileBuffer = getBuffer(file);
+
+    if (!fileBuffer || !fileBuffer.content) {
+      res.status(400).json({
+        message: "Failed to generate buffer",
+      });
+      return;
+    }
+    const cloud = await cloudinary.uploader.upload(fileBuffer.content, {
+      folder: "blogs",
+    });
+
+    const user = await User.findByIdAndUpdate(
+      req.user?._id,
+      {
+        image: cloud.secure_url,
+      },
+      { new: true },
+    );
+
+    const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
+      expiresIn: "5d",
+    });
+
+    res.json({
+      message: "User Profile pic updated",
       token,
       user,
     });
