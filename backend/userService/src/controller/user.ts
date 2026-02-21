@@ -22,12 +22,11 @@ export const loginUser = async (req: Request, res: Response) => {
         .json({ message: "User already exists", token: null });
     }
 
+    // When signing the token:
     const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET || "secret",
-      {
-        expiresIn: "7d",
-      },
+      { user }, // wrap in `user`
+      process.env.JWT_SECRET as string,
+      { expiresIn: "7d" },
     );
     return res.status(200).json({ user, token });
   } catch (error) {
