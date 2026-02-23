@@ -28,7 +28,7 @@ async function initDB() {
         image VARCHAR(255) NOT NULL,
         category VARCHAR(255) NOT NULL,
         author VARCHAR(255) NOT NULL,
-        create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         `;
 
@@ -39,7 +39,7 @@ async function initDB() {
         userid VARCHAR(255) NOT NULL,
         username VARCHAR(255) NOT NULL,
         blogid VARCHAR(255) NOT NULL,
-        create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         `;
 
@@ -48,7 +48,7 @@ async function initDB() {
         id SERIAL PRIMARY KEY,
         userid VARCHAR(255) NOT NULL,
         blogid VARCHAR(255) NOT NULL,
-        create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         `;
 
