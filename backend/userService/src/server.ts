@@ -26,9 +26,7 @@ app.use("/api/v1", userRoutes);
 
 app.use(errorLogger);
 
-app.get("/", (req, res) => {
-  res.send("Hello from User Service!");
-});
+app.get("/health", (req, res) => res.sendStatus(200));
 
 const PORT = process.env.PORT || 5000;
 

@@ -62,9 +62,7 @@ async function initDB() {
   }
 }
 
-app.get("/", (req, res) => {
-  res.send("Author Service is running");
-});
+app.get("/health", (req, res) => res.sendStatus(200));
 
 app.use(express.json());
 app.use("/api/v1/blogs", blogRoutes);

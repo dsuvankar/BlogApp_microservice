@@ -24,6 +24,7 @@ redisClient
   .then(() => console.log("Connected to redis"))
   .catch(console.error);
 
+app.get("/health", (req, res) => res.sendStatus(200));
 app.use("/api/v1", blogRoutes);
 
 app.listen(PORT, () => {

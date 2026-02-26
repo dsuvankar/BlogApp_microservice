@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}  
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}  
+    restart: always
+
+  user-service:
+    build: ./backend/userService
+    container_name: user-service
+    ports:
+      - "5000:5000"
+    env_file: ./backend/userService/.env
+    restart: always
+
+  author-service:
+    build: ./backend/authorService
+    container_name: author-service
+    ports:
+      - "5001:5001"
+    env_file: ./backend/authorService/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  blog-service:
+    build: ./backend/blogService
+    container_name: blog-service
+    ports:
+      - "5002:5002"
+    env_file: ./backend/blogService/.env
+    depends_on:
+      - rabbitmq
+    restart: always
