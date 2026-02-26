@@ -11,6 +11,12 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}  
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}  
     restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   user-service:
     build: ./backend/userService
@@ -27,7 +33,8 @@ services:
       - "5001:5001"
     env_file: ./backend/authorService/.env
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     restart: always
 
   blog-service:
@@ -37,5 +44,6 @@ services:
       - "5002:5002"
     env_file: ./backend/blogService/.env
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     restart: always
