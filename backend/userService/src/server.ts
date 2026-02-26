@@ -5,6 +5,8 @@ import userRoutes from "./routes/user";
 import { requestLogger } from "./middleware/logger.middleware";
 import { errorLogger } from "./middleware/errorlogger.middleware";
 import { v2 as cloudinary } from "cloudinary";
+import cors from "cors";
+
 dotenv.config();
 
 cloudinary.config({
@@ -18,6 +20,7 @@ const app = express();
 connectDb();
 
 app.use(express.json());
+app.use(cors());
 app.use(requestLogger);
 app.use("/api/v1", userRoutes);
 

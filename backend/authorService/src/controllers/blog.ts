@@ -2,6 +2,7 @@ import getBuffer from "../utils/dataURI.js";
 import cloudinary from "cloudinary";
 import { sql } from "../utils/db.js";
 import { AuthenticatedRequest } from "../middleware/isAuth.js";
+import { invalidateCachingJob } from "../utils/rabbitmq.js";
 
 export const createBlog = async (req: any, res: any) => {
   try {
@@ -32,7 +33,7 @@ export const createBlog = async (req: any, res: any) => {
     const result =
       await sql`INSERT INTO blogs (title, description, image, blogcontent,category, author) VALUES (${title}, ${description},${cloud.secure_url},${blogcontent},${category},${req.user?._id}) RETURNING *`;
 
-    //   await invalidateChacheJob(["blogs:*"]);
+    await invalidateCachingJob(["blogs:*"]);
 
     res.json({
       message: "Blog Created",
@@ -135,7 +136,7 @@ export const updateBlog = async (req: AuthenticatedRequest, res: any) => {
     RETURNING *
     `;
 
-    // await invalidateChacheJob(["blogs:*", `blog:${id}`]);
+    await invalidateCachingJob(["blogs:*", `blog:${id}`]);
 
     res.json({
       message: "Blog Updated",
@@ -195,7 +196,7 @@ export const deleteBlog = async (req: AuthenticatedRequest, res: any) => {
     await sql`DELETE FROM comments WHERE blogid = ${req.params.id}`;
     await sql`DELETE FROM blogs WHERE id = ${req.params.id}`;
 
-    // await invalidateChacheJob(["blogs:*", `blog:${req.params.id}`]);
+    await invalidateCachingJob(["blogs:*", `blog:${req.params.id}`]);
 
     res.json({
       message: "Blog Delete",
