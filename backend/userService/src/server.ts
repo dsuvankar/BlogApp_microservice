@@ -27,6 +27,9 @@ app.use("/api/v1", userRoutes);
 app.use(errorLogger);
 
 app.get("/health", (req, res) => res.sendStatus(200));
+app.get("/", (req, res) => {
+  res.send("User Service is running");
+});
 
 const PORT = process.env.PORT || 5000;
 
