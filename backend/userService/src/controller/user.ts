@@ -43,7 +43,7 @@ export const loginUser = async (req: AuthenticatedRequest, res: Response) => {
         .json({ message: "User already exists", token: null });
     }
 
-    const token = jwt.sign({ user }, process.env.JWT_SEC as string, {
+    const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
       expiresIn: "5d",
     });
 
