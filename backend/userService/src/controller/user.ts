@@ -9,39 +9,51 @@ import axios from "axios";
 
 export const loginUser = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    // const { code } = req.body;
+    const { code } = req.body;
 
-    // if (!code) {
-    //   res.status(400).json({
-    //     message: "Authorization code is required",
-    //   });
-    //   return;
-    // }
-
-    // const googleRes = await oauth2client.getToken(code);
-
-    // oauth2client.setCredentials(googleRes.tokens);
-
-    // const userRes = await axios.get(
-    //   `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`,
-    // );
-
-    // const { email, name, picture } = userRes.data;
-
-    const { email, name, image } = req.body;
-
-    if (!email || !name || !image) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!code) {
+      res.status(400).json({
+        message: "Authorization code is required",
+      });
+      return;
     }
+
+    const googleRes = await oauth2client.getToken(code);
+
+    oauth2client.setCredentials(googleRes.tokens);
+
+    const userRes = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`,
+    );
+
+    const { email, name, picture } = userRes.data;
 
     let user = await User.findOne({ email });
+
     if (!user) {
-      user = await User.create({ email, name, image });
-    } else {
-      return res
-        .status(202)
-        .json({ message: "User already exists", token: null });
+      user = await User.create({
+        name,
+        email,
+        image: picture,
+      });
     }
+
+    // const { email, name, image } = req.body;
+
+    // if (!email || !name || !image) {
+    //   return res.status(400).json({ message: "All fields are required" });
+    // }
+
+    // let user = await User.findOne({ email });
+    // if (!user) {
+    //   user = await User.create({ email, name, image });
+    // } else {
+    //   return res
+    //     .status(202)
+    //     .json({ message: "User already exists", token: null });
+    // }
+
+    // let user = await User.findOne({ email });
 
     const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
       expiresIn: "5d",

@@ -14,8 +14,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { get } from "http";
 
 export const user_service = "http://localhost:5000";
-export const author_service = "http://localhost:5001";
-export const blog_service = "http://localhost:5002";
+export const author_service = "http://72.61.172.162:5001";
+export const blog_service = "http://72.61.172.162:5002";
 
 export const blogCategories = [
   "Techonlogy",
