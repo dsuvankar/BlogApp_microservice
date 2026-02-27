@@ -13,8 +13,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { get } from "http";
 
-export const user_service = "http://localhost:5000";
-export const author_service = "http://72.61.172.162:5001";
+export const user_service = "http://72.61.172.162:5000";
+export const author_service = "http://localhost:5001";
 export const blog_service = "http://72.61.172.162:5002";
 
 export const blogCategories = [
@@ -95,9 +95,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         },
       });
 
-      setUser(data);
-      setIsAuth(true);
-      setLoading(false);
+      if (data?.success === true) {
+        setUser(data?.user);
+        setIsAuth(true);
+        setLoading(false);
+      } else {
+        setUser(null);
+        setIsAuth(false);
+        setLoading(false);
+      }
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -114,7 +120,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setBlogLoading(true);
     try {
       const { data } = await axios.get(
-        `${blog_service}/api/v1/blog/all?searchQuery=${searchQuery}&category=${category}`,
+        `${blog_service}/api/v1/blogs/all?searchQuery=${searchQuery}&category=${category}`,
       );
 
       setBlogs(data);

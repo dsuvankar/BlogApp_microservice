@@ -1,13 +1,8 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { redirect } from "next/navigation";
+import React from "react";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <h1>Hello World!</h1>
-      <div>
-        <Button>Click Mee</Button>
-      </div>
-    </div>
-  );
-}
+const Home = () => {
+  return redirect("/blogs");
+};
+
+export default Home;
